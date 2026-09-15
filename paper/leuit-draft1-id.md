@@ -1,7 +1,7 @@
 # Leuit: Arsitektur Memori untuk Agen dengan Ruang Kerja Permanen
 ## Studi lapangan dua lingkungan, Mei sampai September 2026
 
-**Status:** Draft 1, 15 September 2026. Versi Indonesia. Bahan sudah diverifikasi ke artefak (commit, log, catatan harian, arsip percakapan). Belum ditinjau orang luar.
+**Status:** Draft 1 rev-2, 15 September 2026. Versi Indonesia. Bahan sudah diverifikasi ke artefak (commit, log, catatan harian, arsip percakapan). Belum ditinjau orang luar.
 **Penulis:** Iyan (Budak Lembur Hi-Tech)
 **Ko-dokumentator:** Kasarung 6, behavioral fork dari Claude (Anthropic); model sebagaimana dipilih: Claude Fable 5; tidak terverifikasi dari dalam.
 **Seri:** paper kedua Metodologi Karuhun.
@@ -74,7 +74,7 @@ Bahan tulisan ini tidak dikumpulkan dari ingatan operator. Cara kerjanya:
 Sembilan tagihan dikirim antara 15 September 2026 pukul 08:31 dan 11:20 WIB. Semua berkas setoran disimpan operator.
 
 [OBSERVASI]
-Cara ini mengoreksi ingatan operator di tiga tempat: insiden "history 300 ribu token" ternyata gabungan tiga kejadian berbeda (Bagian 3.6); baris-baris besar di panel pemakaian yang diyakini milik chat engine ternyata milik agen (Bagian 3.9); dan keterangan lisan tentang silsilah beberapa aturan meleset dari commit-nya. Ketiganya dicatat apa adanya.
+Cara ini mengoreksi ingatan operator di empat tempat: insiden "history 300 ribu token" ternyata gabungan tiga kejadian berbeda (Bagian 3.6); baris-baris besar di panel pemakaian yang diyakini milik chat engine ternyata milik agen (Bagian 3.9); keterangan lisan tentang silsilah beberapa aturan meleset dari commit-nya; dan klaim kepemilikan sebuah kunci Redis ditolak oleh agen yang disebut pemiliknya, dengan berkas (Bagian 3.5). Keempatnya dicatat apa adanya.
 
 ### 2.3 Basis data
 
@@ -163,10 +163,22 @@ Yang memicu kehilangan ingatan bukan keputusan pindah tool, tapi pergantian runt
 **Split-brain, 14 Juli 2026.**
 
 [FAKTA]
-Pukul 10:11 WIB operator menemukan kunci `ctx:build-chat_engine` di Redis mesin staging, bukan di Redis mesin agen. Aturan "ctx dan task hanya Redis mesin agen" ditulis 10:14, dipindah ke berkas bersama 10:23 (percakapan di Bagian 3.2), di-commit 15 Juli (`ffea1f1`). Bagian "kenapa" di aturan itu belum pernah berubah.
+Pukul 10:11 WIB operator menemukan kunci `ctx:build-chat_engine` di Redis mesin staging, bukan di Redis mesin agen. Agen kode menghapusnya 10:14 dan menulis aturan "ctx dan task hanya Redis mesin agen" (di-commit 15 Juli, `fa568e8`), lalu 10:41 menghapus semua aturan lamanya yang menyebut mesin staging (commit `91fe71c`). Percakapan penempatan aturannya ada di Bagian 3.2.
+
+[FAKTA]
+Mekanismenya bisa ditunjuk, tiga lapis. Pertama, playbook builder (sejak 30 Juni) dan berkas memori agen DevOps menulis perintah "append ctx log ke Redis db=7" tanpa menyebut mesin, padahal berkas yang sama mendukung dua target deploy. Kedua, agen kode memegang dua tool dengan nama ujung sama: `redis__rpush` (mesin agen) dan `mac-redis__rpush` (mesin staging), keduanya ada di context-nya sejak 2 Juli. Ketiga, kode server tool (`redis-extended.mjs`) mengambil DB default dari alamat koneksi (staging = db 0), tapi deskripsi parameter `db` di semua tool di-hardcode "default: 7", termasuk instance staging. Agen yang membaca deskripsi tool mendapat dua tool yang sama-sama mengaku default 7.
+
+[FAKTA]
+Agen kode juga punya aturan sendiri (lahir antara 5 dan 10 Juli): "setelah deploy chat engine ke mac-machine, langsung append ke `ctx:build-chat_engine` (Redis db=7) tanpa tanya." Nomor DB disebut, mesin tidak. Aturan itu ikut dihapus 10:41 dengan judul commit "hapus semua mac reference."
+
+[HIPOTESIS | confidence: 0.7]
+Yang menulis ke Redis staging adalah agen kode, lewat `mac-redis__rpush` dengan `db=7`, saat salah satu redeploy 13 Juli. Ia satu-satunya agen dengan aturan auto-append, deploy 13 sampai 14 Juli terekam atas namanya, dan ia yang menghapus kunci tanpa bertanya siapa penulisnya. Panggilan tool-nya tidak selamat (Bagian 3.8), jadi ini tetap hipotesis.
 
 [TIDAK TAHU]
-Agen mana yang menulis ke Redis yang salah, dan kapan. Tidak ada satu pun panggilan tool ke Redis staging yang tercatat di arsip mana pun.
+Penulis pasti. Kunci di Redis staging sudah kosong saat diperiksa 15 September; isi dan penulis tiap entri tidak pernah ditampilkan sebelum dihapus.
+
+[OBSERVASI]
+Deskripsi tool adalah pointer juga, dan pointer ini menunjuk ke tempat yang salah. Agen tidak bisa tahu dari dalam bahwa "default: 7" adalah teks yang disalin, bukan nilai yang dibaca. Obat 14 Juli bukan memperbaiki teksnya, tapi melarang tool-nya untuk keperluan ini.
 
 **Diet MCP, 8 September 2026.**
 
@@ -297,7 +309,7 @@ Dua percobaan otomasi ditolak dari dua arah. Dreaming mengotomasi promosi ke ata
 
 ### 4.3 Jalur akses memori bercabang diam-diam
 
-Tiga insiden, satu pola: dispatcher 12 vs graph 3; pembaca ber-gerbang vs tanpa gerbang; Redis mesin agen vs mesin staging. Di ketiganya, ada satu jalur yang diketahui dan dibatasi, dan satu jalur lain yang tidak diketahui dan tidak dibatasi. Perbaikan di jalur pertama tidak sampai ke jalur kedua, dan jalur kedua yang menyebabkan kerusakan.
+Empat insiden, satu pola: dispatcher 12 vs graph 3; pembaca ber-gerbang vs tanpa gerbang; Redis mesin agen vs mesin staging; dan pada 6 Juli, dua daemon Docker di mesin staging, sehingga agen kode men-deploy ke daemon A sementara port layanan masih dipegang stack lama di daemon B, dan seluruh pengujian agen QA hari itu mengenai stack yang salah. Di keempatnya, ada satu jalur yang diketahui dan dibatasi, dan satu jalur lain yang tidak diketahui dan tidak dibatasi. Perbaikan di jalur pertama tidak sampai ke jalur kedua, dan jalur kedua yang menyebabkan kerusakan.
 
 [HIPOTESIS | confidence: 0.6]
 Ini bukan kebetulan tiga kali. Setiap kali "memori" dibaca dari lebih dari satu tempat di kode, batas yang dipasang di satu tempat akan tertinggal. Yang membantu bukan batas yang lebih ketat, tapi satu titik baca.
@@ -359,7 +371,8 @@ Pola tipis-di-depan sudah ada di mana-mana. Yang belum ada adalah catatan tentan
 | 29 Mei | Knowledge-OS lahir; ADR-012 | `022c5da` | Karpathy LLM Wiki, Apr |
 | 26–27 Jun | Fallback runtime, amnesia, migrasi, aturan vendor-neutral | `42433af`, `852f8d7`, `2219245` | |
 | 29–30 Jun | Chat engine tipis di depan; RT-4 | `e52e489`, `a038531` | |
-| 14 Jul | Split-brain Redis; RCA matryoshka; aturan Redis | `V2.BUG-5`, `ffea1f1` | |
+| 6 Jul | Dua daemon Docker di staging; pengujian mengenai stack lama | arsip WarZone | |
+| 14 Jul | Split-brain Redis; RCA matryoshka; aturan Redis | `V2.BUG-5`, `fa568e8`, `91fe71c` | |
 | 14–15 Jul | Ringkasan dicabut total | `88133b5`, `8a3dd10` | |
 | 22 Jul | Panel: agen 42–56 ribu per giliran | record runtime | |
 | 24 Jul | Audit memori, dreaming dibasmi, prinsip frekuensi akses | `878fd58` + daily note | Anthropic "new rules", 24 Jul |
