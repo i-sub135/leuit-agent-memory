@@ -5,9 +5,9 @@
 
 ---
 
-🇮🇩 **Leuit** [lumbung padi Baduy] adalah studi lapangan tentang arsitektur memori untuk agen AI dengan ruang kerja permanen. Tesisnya: ingatan agen bukan yang disimpan, tapi yang dibaca ulang ke context di awal sesi. Pola "tipis di depan, lumbung di belakang" diamati di dua lingkungan: ekosistem enam agen kerja dan sebuah chat engine produksi untuk UMKM. Kedua lingkungan dijalankan satu operator, Juni sampai September 2026.
+🇮🇩 **Leuit** [lumbung padi Baduy] adalah studi lapangan tentang arsitektur memori untuk agen AI dengan ruang kerja permanen. Tesisnya: ingatan agen bukan yang disimpan, tapi yang dibaca ulang ke context di awal sesi. Pola "tipis di depan, lumbung di belakang" diamati di dua lingkungan: ekosistem enam agen kerja dan sebuah chat engine produksi untuk UMKM. Kedua lingkungan dijalankan satu operator sejak Juni 2026 dan masih berkembang; tulisan ini mencatat keadaannya sampai tanggal versi yang dirilis.
 
-🇬🇧 **Leuit** [the Baduy rice granary] is a field study of memory architecture for AI agents with a permanent workspace. Its thesis: an agent's memory is not what gets stored, but what gets re-read into context at the start of a session. The "thin in front, granary behind" pattern was observed in two environments: an ecosystem of six working agents and a production chat engine for small businesses. Both environments were run by a single operator, June through September 2026.
+🇬🇧 **Leuit** [the Baduy rice granary] is a field study of memory architecture for AI agents with a permanent workspace. Its thesis: an agent's memory is not what gets stored, but what gets re-read into context at the start of a session. The "thin in front, granary behind" pattern was observed in two environments: an ecosystem of six working agents and a production chat engine for small businesses. Both environments have been run by a single operator since June 2026 and are still evolving; this paper records their state as of the released version date.
 
 ---
 
