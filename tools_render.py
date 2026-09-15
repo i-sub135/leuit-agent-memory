@@ -22,6 +22,7 @@ table{border-collapse:collapse;font-size:9.3pt;page-break-inside:avoid;margin:0.
 tr{page-break-inside:avoid}
 td,th{border:1px solid #888;padding:3px 6px;vertical-align:top}
 th{background:#eee}
+div.keep{page-break-inside:avoid}
 hr{border:0;border-top:1px solid #aaa;margin:1.2em 0}
 blockquote{border-left:3px solid #999;margin:0.6em 0;padding-left:0.8em;color:#333}
 """
@@ -30,8 +31,10 @@ html=subprocess.run(["pandoc",str(tmp),"-s","--css","/tmp/_style.css","--metadat
 h=pathlib.Path("/tmp/_render.html").read_text(encoding="utf-8")
 # bab utama mulai halaman baru: h2 bernomor 1-5 dan LAMPIRAN A
 h=re.sub(r'<h2 id="([^"]*)">((?:1|2|3|4|5)\. |LAMPIRAN A)', r'<h2 class="newpage" id="\1">\2', h)
+# heading h3/h4 dibungkus bersama blok berikutnya supaya tidak jadi baris terakhir halaman
+h=re.sub(r'(<h[34][^>]*>.*?</h[34]>\s*)((?:<h4[^>]*>.*?</h4>\s*)?(?:<p>.*?</p>|<table>.*?</table>|<ul>.*?</ul>|<ol>.*?</ol>))', r'<div class="keep">\1\2</div>', h, flags=re.S)
 pathlib.Path("/tmp/_render.html").write_text(h,encoding="utf-8")
-subprocess.run(["wkhtmltopdf","-q","--page-size","A4","--enable-local-file-access","--footer-center","[page] / [topage]","--footer-font-size","8","--footer-spacing","6",
+subprocess.run(["wkhtmltopdf","-q","--page-size","A4","--enable-local-file-access","--margin-top","22mm","--margin-bottom","20mm","--margin-left","16mm","--margin-right","16mm","--footer-center","[page] / [topage]","--footer-font-size","8","--footer-spacing","6",
   "--header-right",title,"--header-font-size","7","--header-spacing","6","/tmp/_render.html",str(out)])
 print("ok",out)
 
@@ -42,8 +45,8 @@ info=subprocess.run(["pdfinfo",str(out)],capture_output=True,text=True).stdout
 n=int(re.search(r"Pages:\s+(\d+)",info).group(1))
 c=canvas.Canvas("/tmp/_stamp.pdf",pagesize=A4); W,H=A4
 for i in range(1,n+1):
-    c.setFont("Helvetica",8); c.drawCentredString(W/2,28,f"{i} / {n}")
-    if title: c.drawRightString(W-45,H-28,title)
+    c.setFont("Helvetica",8); c.drawCentredString(W/2,26,f"{i} / {n}")
+    if title: c.drawRightString(W-45,H-32,title)
     c.showPage()
 c.save()
 subprocess.run(["pdftk",str(out),"multistamp","/tmp/_stamp.pdf","output","/tmp/_stamped.pdf"],check=True)

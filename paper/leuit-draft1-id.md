@@ -375,16 +375,27 @@ Pola tipis-di-depan sudah ada di mana-mana. Yang belum ada adalah catatan tentan
 
 ## LAMPIRAN D. Rujukan
 
+
 [1] Packer, C., Wooders, S., Lin, K., Fang, V., Patil, S. G., Stoica, I., & Gonzalez, J. E. (2023). MemGPT: Towards LLMs as Operating Systems. arXiv:2310.08560.
+
 [2] Park, J. S., et al. (2023). Generative Agents: Interactive Simulacra of Human Behavior. UIST 2023.
+
 [3] Lin, K., Snell, C., Wang, Y., Packer, C., Wooders, S., Stoica, I., & Gonzalez, J. E. (2025). Sleep-time Compute: Beyond Inference Scaling at Test-time. arXiv:2504.13171.
+
 [4] Hong, K., Troynikov, A., & Huber, J. (2025). Context Rot: How Increasing Input Tokens Impacts LLM Performance. Chroma technical report, July 2025.
+
 [5] Anthropic (2025). Effective context engineering for AI agents. Engineering blog, September 2025.
+
 [6] Shihipar, T., Anthropic (2026). The new rules of context engineering for Claude 5 generation models. 24 July 2026.
+
 [7] AGENTS.md specification (2025), Agentic AI Foundation, Linux Foundation; adoption figures per arXiv:2604.21090.
+
 [8] Simsek, B. (2026). When to Forget: A Memory Governance Primitive. arXiv:2604.12007.
+
 [9] Verbatim Chunks Beat Extracted Artifacts: A Controlled Ablation of Memory Representations for Long LLM Conversations (2026). arXiv:2601.00821. Penulis belum diverifikasi.
+
 [10] Karpathy, A. (2026). LLM Wiki (gist), April 2026.
+
 [11] Meta-Cognitive Memory Policy Optimization for Long-Horizon LLM Agents (2026). arXiv:2605.30159. Penulis belum diverifikasi.
 
 Catatan: rujukan [9] dan [11] dibaca dari abstrak; nama penulis akan dilengkapi sebelum versi 1.0.
