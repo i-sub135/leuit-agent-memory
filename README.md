@@ -1,7 +1,7 @@
 # Leuit — Arsitektur Memori untuk Agen dengan Ruang Kerja Permanen
 
 **Status:** draft 0, sedang dikumpulkan bahannya. Belum ada versi yang bisa dikutip.
-**Seri:** paper kedua Metodologi Karuhun. Paper pertama: [karuhun-paper](https://github.com/i-sub135/karuhun-paper).
+**Seri:** paper kedua Metodologi Karuhun. Paper pertama (`karuhun-paper`) masih dalam masa tunggu tinjauan dan belum dibuka; tautannya akan ditambahkan saat repo itu publik.
 
 ---
 
@@ -26,7 +26,7 @@ Di Baduy, padi disimpan di leuit bertahun-tahun dan diambil hanya saat dibutuhka
 
 ## Cara membaca klaim di tulisan ini
 
-Setiap klaim membawa label kelas buktinya, mengikuti Evidence Declaration Protocol (EDP): `[FAKTA]`, `[OBSERVASI]`, `[HIPOTESIS | confidence: x]`, `[ASUMSI | confidence: x]`, `[TIDAK TAHU]`, `[FALSE REASON]`, `[DARK COGNITION]`. Fakta dan observasi tidak membawa angka; hipotesis dan asumsi wajib. Dokumen protokolnya ada di repo paper pertama, folder `protocol/`.
+Setiap klaim membawa label kelas buktinya, mengikuti Evidence Declaration Protocol (EDP): `[FAKTA]`, `[OBSERVASI]`, `[HIPOTESIS | confidence: x]`, `[ASUMSI | confidence: x]`, `[TIDAK TAHU]`, `[FALSE REASON]`, `[DARK COGNITION]`. Fakta dan observasi tidak membawa angka; hipotesis dan asumsi wajib. Dokumen protokolnya (dua berkas: protokol dan riwayat lahirnya) akan disalin ke folder `protocol/` di repo ini saat naskah mulai ditulis; sampai itu, ringkasannya cukup di paragraf ini.
 
 ## Yang bukan
 
