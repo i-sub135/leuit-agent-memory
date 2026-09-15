@@ -31,7 +31,7 @@ pathlib.Path("/tmp/_style.css").write_text(css)
 html=subprocess.run(["pandoc",str(tmp),"-s","--css","/tmp/_style.css","--metadata","title=","-o","/tmp/_render.html"],capture_output=True)
 h=pathlib.Path("/tmp/_render.html").read_text(encoding="utf-8")
 # bab utama mulai halaman baru: h2 bernomor 1-5 dan LAMPIRAN A
-h=re.sub(r'<h2 id="([^"]*)">((?:1|2|3|4|5)\. |LAMPIRAN A|LAMPIRAN C)', r'<h2 class="newpage" id="\1">\2', h)
+h=re.sub(r'<h2 id="([^"]*)">((?:1|2|3|4|5)\. |LAMPIRAN A|LAMPIRAN C|LAMPIRAN D)', r'<h2 class="newpage" id="\1">\2', h)
 # heading h3/h4 dibungkus bersama blok berikutnya supaya tidak jadi baris terakhir halaman
 h=re.sub(r'(<h[234][^>]*>.*?</h[234]>\s*)((?:<h4[^>]*>.*?</h4>\s*)?(?:<p>.*?</p>|<table>.*?</table>|<ul>.*?</ul>|<ol>.*?</ol>))', r'<div class="keep">\1\2</div>', h, flags=re.S)
 pathlib.Path("/tmp/_render.html").write_text(h,encoding="utf-8")
